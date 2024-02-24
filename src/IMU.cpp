@@ -1,4 +1,5 @@
 #include <IMU.h>
+#include <Debug.h>
 #include "Wire.h"
 
 bool IMU::initialize() {
@@ -10,15 +11,15 @@ bool IMU::initialize() {
     Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
 
     // initialize device
-    Serial.println(F("Initializing I2C devices..."));
+    DEBUG_PRINTLN(F("Initializing I2C devices..."));
     _mpu.initialize();
 
     // verify connection
-    Serial.println(F("Testing device connections..."));
-    Serial.println(_mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+    DEBUG_PRINTLN(F("Testing device connections..."));
+    DEBUG_PRINTLN(_mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
     // load and configure the DMP
-    Serial.println(F("Initializing DMP..."));
+    DEBUG_PRINTLN(F("Initializing DMP..."));
     int deviceStatus = _mpu.dmpInitialize(); // 0 if successful
 
     if (deviceStatus != 0){
@@ -26,9 +27,9 @@ bool IMU::initialize() {
         // 1 = initial memory load failed
         // 2 = DMP configuration updates failed
         // (if it's going to break, usually the code will be 1)
-        Serial.print(F("DMP Initialization failed (code "));
-        Serial.print(deviceStatus);
-        Serial.println(F(")"));
+        DEBUG_PRINT("DMP Initialization failed (code ");
+        DEBUG_PRINT(deviceStatus);
+        DEBUG_PRINTLN(")");
     }
 
     // Calibration Time: generate offsets and calibrate our MPU6050
@@ -37,7 +38,7 @@ bool IMU::initialize() {
     _mpu.PrintActiveOffsets();
 
     // turn on the DMP, now that it's ready
-    Serial.println(F("Enabling DMP..."));
+    DEBUG_PRINTLN((F("Enabling DMP...")));
     _mpu.setDMPEnabled(true);
 
     // get expected DMP packet size for later comparison
