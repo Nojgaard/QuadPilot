@@ -4,10 +4,14 @@
 IMU imu;
 Vector3f ypr;
 Vector3i16 acceleration;
+unsigned long lastMillis;
+unsigned long frameMillis;
 
 void setup() {
   Serial.begin(9600);
   imu.initialize();
+  lastMillis = millis();
+  frameMillis = 33; // 30 frames a second
 }
 
 void loop() {
@@ -15,10 +19,17 @@ void loop() {
   if (success != 0) {
     return;
   }
-  Serial.print("ypr\t");
+  unsigned long currentMillis = millis();
+  Serial.print(currentMillis / 1000.0f);
+  Serial.print(" ");
   Serial.print(ypr.x * 180/M_PI);
-  Serial.print("\t");
+  Serial.print(" ");
   Serial.print(ypr.y * 180/M_PI);
-  Serial.print("\t");
+  Serial.print(" ");
   Serial.println(ypr.z * 180/M_PI);
+
+  unsigned long dt = lastMillis - currentMillis;
+  lastMillis = currentMillis;
+  if (dt < frameMillis)
+    delay(frameMillis - dt);
 }
