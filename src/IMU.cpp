@@ -41,6 +41,27 @@ bool IMU::initialize() {
     _mpu.setDMPEnabled(true);
 
     // get expected DMP packet size for later comparison
-    packetSize = _mpu.dmpGetFIFOPacketSize();
+    _packetSize = _mpu.dmpGetFIFOPacketSize();
     return true;
+}
+
+uint8_t IMU::read(Vector3f& yawPitchRoll, Vector3i16& inertialFrameAcceleration) {
+    // dmpGetCurrentFIFOPacket return 1 on success and 0 on failure
+    uint8_t success = _mpu.dmpGetCurrentFIFOPacket(_fifoBuffer);
+
+    if (success == 1)
+        return success;
+    success = 0;
+
+    // read yaw pitch and roll
+    success += _mpu.dmpGetQuaternion(&_orientation, _fifoBuffer);
+    success += _mpu.dmpGetGravity(&_gravity, &_orientation);
+    success += _mpu.dmpGetYawPitchRoll(yawPitchRoll.array(), &_orientation, &_gravity);
+
+    // read acceleration in inertial frame
+    success += _mpu.dmpGetAccel(&_accelerationSensor, _fifoBuffer);
+    success += _mpu.dmpGetLinearAccel(&_accelerationReal, &_accelerationSensor, &_gravity);
+    success += _mpu.dmpConvertToWorldFrame(&inertialFrameAcceleration, &_accelerationReal, &_orientation);
+
+    return success;
 }
