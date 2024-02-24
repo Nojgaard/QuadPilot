@@ -1,6 +1,7 @@
 #include <IMU.h>
 #include <Debug.h>
 #include "Wire.h"
+#include <EEPROM.h>
 
 bool IMU::initialize() {
     // Exit if Serial has not initialized
@@ -32,10 +33,8 @@ bool IMU::initialize() {
         DEBUG_PRINTLN(")");
     }
 
-    // Calibration Time: generate offsets and calibrate our MPU6050
-    _mpu.CalibrateAccel(6);
-    _mpu.CalibrateGyro(6);
-    _mpu.PrintActiveOffsets();
+    // read the calibration from EEPROM
+    readCalibration();
 
     // turn on the DMP, now that it's ready
     DEBUG_PRINTLN((F("Enabling DMP...")));
@@ -65,4 +64,37 @@ uint8_t IMU::read(Vector3f& yawPitchRoll, Vector3i16& inertialFrameAcceleration)
     success += _mpu.dmpConvertToWorldFrame(&inertialFrameAcceleration, &_accelerationReal, &_orientation);
 
     return success;
+}
+
+void IMU::calibrate() {
+    // Calibration Time: generate offsets and calibrate our MPU6050
+    _mpu.CalibrateAccel(10);
+    _mpu.CalibrateGyro(10);
+    _mpu.PrintActiveOffsets();
+    storeCalibration();
+}
+
+void IMU::storeCalibration() {
+    int address = 0;
+    
+    EEPROM.put(address + sizeof(int16_t) * 0, _mpu.getXAccelOffset());
+    EEPROM.put(address + sizeof(int16_t) * 1, _mpu.getYAccelOffset());
+    EEPROM.put(address + sizeof(int16_t) * 2, _mpu.getZAccelOffset());
+
+    EEPROM.put(address + sizeof(int16_t) * 3, _mpu.getXGyroOffset());
+    EEPROM.put(address + sizeof(int16_t) * 4, _mpu.getYGyroOffset());
+    EEPROM.put(address + sizeof(int16_t) * 5, _mpu.getZGyroOffset());
+}
+
+void IMU::readCalibration() {
+    int address = 0;
+    int16_t data = 0;
+
+    _mpu.setXAccelOffset(EEPROM.get(address + sizeof(int16_t) * 0, data));
+    _mpu.setYAccelOffset(EEPROM.get(address + sizeof(int16_t) * 1, data));
+    _mpu.setZAccelOffset(EEPROM.get(address + sizeof(int16_t) * 2, data));
+
+    _mpu.setXGyroOffset(EEPROM.get(address + sizeof(int16_t) * 3, data));
+    _mpu.setYGyroOffset(EEPROM.get(address + sizeof(int16_t) * 4, data));
+    _mpu.setZGyroOffset(EEPROM.get(address + sizeof(int16_t) * 5, data));
 }

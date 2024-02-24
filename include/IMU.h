@@ -14,8 +14,12 @@ class IMU {
     public:
     bool initialize();
     uint8_t read(Vector3f& yawPitchRoll, Vector3i16& inertialFrameAcceleration);
+    void calibrate();
 
     private:
+    void storeCalibration();
+    void readCalibration();
+
     MPU6050 _mpu;
 
     // MPU control/status vars
