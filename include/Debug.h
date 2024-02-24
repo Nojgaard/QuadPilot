@@ -1,4 +1,4 @@
-// #define DEBUG_QUAD
+#define DEBUG_QUAD
 #ifdef DEBUG_QUAD
     #define DEBUG_PRINT(x) Serial.print(x)
     #define DEBUG_PRINTF(x, y) Serial.print(x, y)
