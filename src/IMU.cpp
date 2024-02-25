@@ -67,11 +67,20 @@ uint8_t IMU::read(Vector3f& yawPitchRoll, Vector3i16& inertialFrameAcceleration)
 }
 
 void IMU::calibrate() {
-    // Calibration Time: generate offsets and calibrate our MPU6050
-    _mpu.CalibrateAccel(10);
-    _mpu.CalibrateGyro(10);
+    Serial.println("Old active offset:");
     _mpu.PrintActiveOffsets();
+    // Calibration Time: generate offsets and calibrate our MPU6050
+    Serial.println("Calibrating acceleration offsets...");
+    _mpu.CalibrateAccel(10);
+    Serial.println("");
+    Serial.println("Calibrating gyro offsets...");
+    _mpu.CalibrateGyro(10);
+    Serial.println("");
+    Serial.println("Done! Found new offsets:");
+    _mpu.PrintActiveOffsets();
+    Serial.println("Storing offsets on EEPROM...");
     storeCalibration();
+    Serial.println("Calibration finished!");
 }
 
 void IMU::storeCalibration() {
