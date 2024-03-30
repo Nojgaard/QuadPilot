@@ -4,6 +4,34 @@
 
 struct Vector3f : VectorFloat  {
     float* array() { return &x; }
+
+    Vector3f& add(const Vector3f& other) {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+        return *this;
+    }
+
+    Vector3f& sub(const Vector3f& other) {
+        x -= other.x;
+        y -= other.y;
+        z -= other.z;
+        return *this;
+    }
+
+    Vector3f& scale(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        return *this;
+    }
+
+    Vector3f& set(const Vector3f& other){
+        x = other.x;
+        y = other.y;
+        z = other.z;
+        return *this;
+    }
 };
 
 struct Vector3i16 : VectorInt16 {
