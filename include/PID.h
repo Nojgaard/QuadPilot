@@ -2,7 +2,7 @@
 
 #include <Vector3.h>
 
-class PIDError {
+class PID {
     public:
     void update(const Vector3f& target, const Vector3f& measure, float dt);
     const Vector3f& error();

@@ -1,6 +1,6 @@
-#include <PIDError.h>
+#include <PID.h>
 
-void PIDError::update(const Vector3f& target, const Vector3f& measure, float dt) {
+void PID::update(const Vector3f& target, const Vector3f& measure, float dt) {
     _errorTemp.set(_errorProportional);
     
     _errorProportional.set(target).sub(measure);
@@ -14,7 +14,7 @@ void PIDError::update(const Vector3f& target, const Vector3f& measure, float dt)
     _errorIntegral.add(_errorTemp);
 }
 
-const Vector3f& PIDError::error() {
+const Vector3f& PID::error() {
     _error.set(_errorProportional).scale(_scaleProportional);
     
     _errorTemp.set(_errorDerivative).scale(_scaleDerivative);
