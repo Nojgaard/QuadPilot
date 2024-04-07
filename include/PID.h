@@ -4,6 +4,7 @@
 
 class PID {
     public:
+    PID(float scaleDerivative, float scaleProportional, float scaleIntegral);
     void update(const Vector3f& target, const Vector3f& measure, float dt);
     const Vector3f& error();
 
@@ -16,4 +17,5 @@ class PID {
     float _scaleDerivative;
     float _scaleProportional;
     float _scaleIntegral;
+    float _triggerIntegral;
 };

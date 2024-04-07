@@ -32,6 +32,12 @@ struct Vector3f : VectorFloat  {
         z = other.z;
         return *this;
     }
+
+    void clear() {
+        x = 0;
+        y = 0;
+        z = 0;
+    }
 };
 
 struct Vector3i16 : VectorInt16 {
