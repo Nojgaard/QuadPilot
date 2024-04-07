@@ -13,7 +13,7 @@
 class IMU {
     public:
     bool initialize();
-    uint8_t read(Vector3f& yawPitchRoll, Vector3i16& inertialFrameAcceleration);
+    uint8_t read(Vector3f& yawPitchRoll, Vector3f& inertialFrameAcceleration);
     void calibrate();
 
     private:
@@ -27,8 +27,9 @@ class IMU {
     uint16_t _fifoCount;     // count of all bytes currently in FIFO
     uint8_t _fifoBuffer[64]; // FIFO storage buffer
 
-    Quaternion _orientation;           // [w, x, y, z]         quaternion container
-    VectorInt16 _accelerationSensor;   // [x, y, z]            accel sensor measurements
-    VectorInt16 _accelerationReal;     // [x, y, z]            gravity-free accel sensor measurements
-    VectorFloat _gravity;              // [x, y, z]            gravity vector
+    Quaternion _orientation;               // [w, x, y, z]         quaternion container
+    VectorInt16 _accelerationSensor;       // [x, y, z]            accel sensor measurements
+    VectorInt16 _accelerationReal;         // [x, y, z]            gravity-free accel sensor measurements
+    VectorInt16 _inertialFrameAcceleration; // [x, y, z]            gravity-free accel sensor measurements in inertial frame
+    VectorFloat _gravity;                  // [x, y, z]            gravity vector
 };

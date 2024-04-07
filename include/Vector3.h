@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Arduino.h>
 #include <helper_3dmath.h>
 
 struct Vector3f : VectorFloat  {

@@ -1,11 +1,16 @@
 #pragma once 
 
-struct Specifications {
-    /// @brief The max RPM is computed as (battery voltage * kv).
+namespace Specifications {
+    static const short NUM_MOTORS = 4;
+
+    /// @brief The max/min revolutions-per-minute (RPM) is computed as (battery voltage * kv).
     /// Our motors has a KV of 1000, and voltage of a single battery cell ranges from ~[3.7, 4.2] 
     /// depending on charge. We have 3 cells and assume a voltage of 3.9. 
-    static const int MAX_MOTOR_RPM = 11700;
-    static const int MIN_MOTOR_RPM = 0;
+    static const long MAX_MOTOR_RPM = 11700;
+    static const long MIN_MOTOR_RPM = 0;
+
+    static const long MAX_MOTOR_RPM_SQR = MAX_MOTOR_RPM * MAX_MOTOR_RPM;
+    static const long MIN_MOTOR_RPM_SQR = MIN_MOTOR_RPM * MIN_MOTOR_RPM;
 
     /// @brief Length from center of quadcopter to motor (meters).
     static const float ARM_LENGTH = 0.29f;

@@ -5,6 +5,7 @@ PID::PID(float scaleDerivative, float scaleProportional, float scaleIntegral, fl
     _triggerIntegral(triggerIntegral) {}
 
 void PID::update(const Vector3f& target, const Vector3f& measure, float dt) {
+    // update terms
     _errorTemp.set(_errorProportional);
     
     _errorProportional.set(target).sub(measure);
@@ -14,15 +15,13 @@ void PID::update(const Vector3f& target, const Vector3f& measure, float dt) {
         .scale(1/dt);
 
     if (_errorProportional.getMagnitude() <= _triggerIntegral) {
-        // use as temp value
         _errorTemp.set(_errorProportional).scale(dt);
         _errorIntegral.add(_errorTemp);
     } else {
         _errorIntegral.clear();
     }
-}
 
-const Vector3f& PID::error() {
+    // update total error
     _error.set(_errorProportional).scale(_scaleProportional);
     
     _errorTemp.set(_errorDerivative).scale(_scaleDerivative);
@@ -30,5 +29,8 @@ const Vector3f& PID::error() {
 
     _errorTemp.set(_errorIntegral).scale(_scaleIntegral);
     _error.add(_errorTemp);
+}
+
+const Vector3f& PID::error() const {
     return _error;
 }

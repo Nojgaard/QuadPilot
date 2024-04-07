@@ -3,7 +3,7 @@
 
 IMU imu;
 Vector3f ypr;
-Vector3i16 acceleration;
+Vector3f acceleration;
 unsigned long lastMillis;
 unsigned long frameMillis;
 

@@ -45,7 +45,7 @@ bool IMU::initialize() {
     return true;
 }
 
-uint8_t IMU::read(Vector3f& yawPitchRoll, Vector3i16& inertialFrameAcceleration) {
+uint8_t IMU::read(Vector3f& yawPitchRoll, Vector3f& inertialFrameAcceleration) {
     // dmpGetCurrentFIFOPacket return 1 on success and 0 on failure
     uint8_t success = _mpu.dmpGetCurrentFIFOPacket(_fifoBuffer);
 
@@ -61,7 +61,11 @@ uint8_t IMU::read(Vector3f& yawPitchRoll, Vector3i16& inertialFrameAcceleration)
     // read acceleration in inertial frame
     success += _mpu.dmpGetAccel(&_accelerationSensor, _fifoBuffer);
     success += _mpu.dmpGetLinearAccel(&_accelerationReal, &_accelerationSensor, &_gravity);
-    success += _mpu.dmpConvertToWorldFrame(&inertialFrameAcceleration, &_accelerationReal, &_orientation);
+    success += _mpu.dmpConvertToWorldFrame(&_inertialFrameAcceleration, &_accelerationReal, &_orientation);
+
+    inertialFrameAcceleration.x = (float)_inertialFrameAcceleration.x;
+    inertialFrameAcceleration.y = (float)_inertialFrameAcceleration.y;
+    inertialFrameAcceleration.z = (float)_inertialFrameAcceleration.z;
 
     return success;
 }
