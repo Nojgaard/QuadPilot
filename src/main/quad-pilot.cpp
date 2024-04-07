@@ -34,6 +34,7 @@ void setup() {
 void loop() {
     long currentMillis = millis();
     float dt = (currentMillis - lastMillis) / 1000.0f; // delta time in seconds
+    lastMillis = currentMillis;
 
     imu.read(measuredAttitude, measuredVelocity);
     pidAttitude.update(targetAttitude, measuredAttitude, dt);
