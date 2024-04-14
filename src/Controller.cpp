@@ -15,7 +15,7 @@ void Controller::updateInputs(const Vector3f& measuredEulerAngles, const PID& pi
     const Vector3f& angleError = pidEulerAngles.error();
     const Vector3f& velocityError = pidVelocities.error();
 
-    _inputs.targetThrust = (m * g) / (cos(measuredEulerAngles.x) * cos(measuredEulerAngles.y)) + velocityError.z;
+    _inputs.targetThrust = (m * g) / (cos(measuredEulerAngles.x) * cos(measuredEulerAngles.y));
     _inputs.targetEulerAngles.set(angleError);
 }
 
@@ -26,10 +26,10 @@ void Controller::clampInputs() {
     int wmin = Specifications::MIN_MOTOR_RPM_SQR;
     int wmax = Specifications::MAX_MOTOR_RPM_SQR;
 
-    constrain(_inputs.targetThrust, 4 * k * wmin, 4 * k * wmax); // thrust
-    constrain(_inputs.targetEulerAngles.x, -l * k * wmax, l * k * wmax); // roll torque
-    constrain(_inputs.targetEulerAngles.y, -l * k * wmax, l * k * wmax); // pitch torque
-    constrain(_inputs.targetEulerAngles.z, -2 * b * wmax, 2 * b * wmax); // yaw torque
+    _inputs.targetThrust = constrain(_inputs.targetThrust, 4 * k * wmin, 4 * k * wmax); // thrust
+    _inputs.targetEulerAngles.x = constrain(_inputs.targetEulerAngles.x, -l * k * wmax, l * k * wmax); // roll torque
+    _inputs.targetEulerAngles.y = constrain(_inputs.targetEulerAngles.y, -l * k * wmax, l * k * wmax); // pitch torque
+    _inputs.targetEulerAngles.z = constrain(_inputs.targetEulerAngles.z, -2 * b * wmax, 2 * b * wmax); // yaw torque
 }
 
 void Controller::computeTargetRPM(long targetRPMSqr[]) {
@@ -46,6 +46,6 @@ void Controller::computeTargetRPM(long targetRPMSqr[]) {
     targetRPMSqr[3] = thrust / (4 * k) + a.x / (2 * l * k) - a.z / (4 * b);
 
     for (int i = 0; i < Specifications::NUM_MOTORS; i++) {
-        constrain(targetRPMSqr[i], Specifications::MIN_MOTOR_RPM_SQR, Specifications::MAX_MOTOR_RPM_SQR);
+        targetRPMSqr[i] = constrain(targetRPMSqr[i], Specifications::MIN_MOTOR_RPM_SQR, Specifications::MAX_MOTOR_RPM_SQR);
     }
 }
