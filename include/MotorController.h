@@ -8,7 +8,7 @@ class MotorController {
     static const int MAX_PULSE_LENGTH = 1400; // Maximum pulse length in µs
 
     void initialize(const int pins[]);
-    void setRPM(const long rpmSqr[]);
+    void setRPS(const long rpmSqr[]);
     
     private:
     Servo _motors[Specifications::NUM_MOTORS];

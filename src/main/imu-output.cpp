@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <IMU.h>
+#include<SPI.h>
 
 IMU imu;
 Vector3f ypr;

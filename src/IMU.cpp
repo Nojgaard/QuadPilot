@@ -2,6 +2,7 @@
 #include <Debug.h>
 #include "Wire.h"
 #include <EEPROM.h>
+#include <Specifications.h>
 
 bool IMU::initialize() {
     // Exit if Serial has not initialized
@@ -40,19 +41,29 @@ bool IMU::initialize() {
     DEBUG_PRINTLN((F("Enabling DMP...")));
     _mpu.setDMPEnabled(true);
 
+    lastRead = -1;
+
     // get expected DMP packet size for later comparison
     _packetSize = _mpu.dmpGetFIFOPacketSize();
     return true;
 }
 
-uint8_t IMU::read(Vector3f& yawPitchRoll, Vector3f& inertialFrameAcceleration) {
+uint8_t IMU::read(Vector3f& yawPitchRoll, Vector3f& inertialFrameVelocity, float& dt) {
     // dmpGetCurrentFIFOPacket return 1 on success and 0 on failure
     uint8_t success = _mpu.dmpGetCurrentFIFOPacket(_fifoBuffer);
 
     if (success == 1)
         return success;
-    success = 0;
+    if (lastRead < 0)
+    {
+        lastRead = millis();
+        return 1;
+    }
 
+    dt = (millis() - lastRead)/1000.0;
+    lastRead = millis();
+
+    success = 0;
     // read yaw pitch and roll
     success += _mpu.dmpGetQuaternion(&_orientation, _fifoBuffer);
     success += _mpu.dmpGetGravity(&_gravity, &_orientation);
@@ -67,9 +78,9 @@ uint8_t IMU::read(Vector3f& yawPitchRoll, Vector3f& inertialFrameAcceleration) {
     success += _mpu.dmpGetLinearAccel(&_accelerationReal, &_accelerationSensor, &_gravity);
     success += _mpu.dmpConvertToWorldFrame(&_inertialFrameAcceleration, &_accelerationReal, &_orientation);
 
-    inertialFrameAcceleration.x = (float)_inertialFrameAcceleration.x;
-    inertialFrameAcceleration.y = (float)_inertialFrameAcceleration.y;
-    inertialFrameAcceleration.z = (float)_inertialFrameAcceleration.z;
+    inertialFrameVelocity.x += (int)(100 * dt * (_inertialFrameAcceleration.x / ACC_SCALE * Specifications::GRAVITY) + 0.5) / 100.0;
+    inertialFrameVelocity.y += (int)(100 * dt * (_inertialFrameAcceleration.y / ACC_SCALE * Specifications::GRAVITY) + 0.5) / 100.0;
+    inertialFrameVelocity.z += (int)(100 * dt * (_inertialFrameAcceleration.z / ACC_SCALE * Specifications::GRAVITY)+ 0.5) / 100.0;
 
     return success;
 }

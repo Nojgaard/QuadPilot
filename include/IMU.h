@@ -13,14 +13,18 @@
 class IMU {
     public:
     bool initialize();
-    uint8_t read(Vector3f& yawPitchRoll, Vector3f& inertialFrameAcceleration);
+    uint8_t read(Vector3f& yawPitchRoll, Vector3f& inertialFrameVelocity, float& dt);
     void calibrate();
 
     private:
     void storeCalibration();
     void readCalibration();
+    long lastRead;
 
     MPU6050 _mpu;
+
+    // Acceleration 2G scale
+    float ACC_SCALE = 16384 / 2.0;
 
     // MPU control/status vars
     uint16_t _packetSize;    // expected DMP packet size (default is 42 bytes)
@@ -30,6 +34,6 @@ class IMU {
     Quaternion _orientation;               // [w, x, y, z]         quaternion container
     VectorInt16 _accelerationSensor;       // [x, y, z]            accel sensor measurements
     VectorInt16 _accelerationReal;         // [x, y, z]            gravity-free accel sensor measurements
-    VectorInt16 _inertialFrameAcceleration; // [x, y, z]            gravity-free accel sensor measurements in inertial frame
+    VectorInt16 _inertialFrameAcceleration; // [x, y, z]           gravity-free accel sensor measurements in inertial frame
     VectorFloat _gravity;                  // [x, y, z]            gravity vector
 };
