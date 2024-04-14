@@ -6,6 +6,8 @@
 struct Vector3f : VectorFloat  {
     float* array() { return &x; }
 
+    const float* array() const { return &x; }
+
     Vector3f& add(const Vector3f& other) {
         x += other.x;
         y += other.y;

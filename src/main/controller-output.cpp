@@ -20,8 +20,10 @@ long leastReadMillis = -1;
 long targetRPMSqr[Specifications::NUM_MOTORS] = {0, 0, 0, 0};
 
 void setup() {
-    imu.initialize();
+    
     Serial.begin(9600);
+    imu.initialize();
+    //imu.calibrate();
 }
 
 void loop() {
@@ -45,6 +47,7 @@ void loop() {
 
     
     Serial.print(currentMillis / 1000.0f); Serial.print(" ");
+
     for (int i = 0; i < Specifications::NUM_MOTORS; i++) {
         long percMotorThrust = map(targetRPMSqr[i], Specifications::MIN_MOTOR_RPM_SQR, Specifications::MAX_MOTOR_RPM_SQR, 0, 100);
         Serial.print(percMotorThrust); Serial.print(" ");

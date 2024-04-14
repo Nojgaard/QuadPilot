@@ -58,6 +58,10 @@ uint8_t IMU::read(Vector3f& yawPitchRoll, Vector3f& inertialFrameAcceleration) {
     success += _mpu.dmpGetGravity(&_gravity, &_orientation);
     success += _mpu.dmpGetYawPitchRoll(yawPitchRoll.array(), &_orientation, &_gravity);
 
+    float tmp = yawPitchRoll.x;
+    yawPitchRoll.x = yawPitchRoll.z;
+    yawPitchRoll.z = tmp;
+
     // read acceleration in inertial frame
     success += _mpu.dmpGetAccel(&_accelerationSensor, _fifoBuffer);
     success += _mpu.dmpGetLinearAccel(&_accelerationReal, &_accelerationSensor, &_gravity);
