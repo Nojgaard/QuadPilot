@@ -10,12 +10,12 @@ struct ControlInputs {
 
 class Controller {
     public:
-    void update(const Vector3f& measuredEulerAngles, const PID& pidEulerAngles, const PID& pidVelocities, long targetRPMSqr[]);
+    void update(const Vector3f& measuredEulerAngles, const PID& pidEulerAngles, const PID& pidVelocities, long targetRPSSqr[]);
 
     private:
     void updateInputs(const Vector3f& measuredEulerAngles, const PID& pidEulerAngles, const PID& pidVelocities);
     void clampInputs();
-    void computeTargetRPM(long targetRPMSqr[]);
+    void computeTargetRPM(long targetRPSSqr[]);
 
     ControlInputs _inputs;
 };
