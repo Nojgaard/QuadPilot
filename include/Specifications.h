@@ -1,5 +1,7 @@
 #pragma once 
 
+#include <Arduino.h>
+
 namespace Specifications {
     static const short NUM_MOTORS = 4;
 
@@ -9,8 +11,10 @@ namespace Specifications {
     static const long MAX_MOTOR_RPM = 11700;
     static const long MIN_MOTOR_RPM = 0;
 
-    static const long MAX_MOTOR_RPM_SQR = MAX_MOTOR_RPM * MAX_MOTOR_RPM;
-    static const long MIN_MOTOR_RPM_SQR = MIN_MOTOR_RPM * MIN_MOTOR_RPM;
+    static const double RPM_TO_RPS = 2 * PI / 60;
+
+    static const long MAX_MOTOR_RPM_SQR = RPM_TO_RPS * RPM_TO_RPS * MAX_MOTOR_RPM * MAX_MOTOR_RPM;
+    static const long MIN_MOTOR_RPM_SQR = RPM_TO_RPS * RPM_TO_RPS * MIN_MOTOR_RPM * MIN_MOTOR_RPM;
 
     /// @brief Length from center of quadcopter to motor (meters).
     static const float ARM_LENGTH = 0.29f;
