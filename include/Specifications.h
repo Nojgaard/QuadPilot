@@ -13,7 +13,7 @@ namespace Specifications {
 
     static const double RPM_TO_RPS = 2 * PI / 60;
 
-    static const long MAX_MOTOR_RPM_SQR = RPM_TO_RPS * RPM_TO_RPS * MAX_MOTOR_RPM * MAX_MOTOR_RPM;
+    static const long MAX_MOTOR_RPM_SQR = (RPM_TO_RPS * RPM_TO_RPS) * (MAX_MOTOR_RPM * MAX_MOTOR_RPM);
     static const long MIN_MOTOR_RPM_SQR = RPM_TO_RPS * RPM_TO_RPS * MIN_MOTOR_RPM * MIN_MOTOR_RPM;
 
     /// @brief Length from center of quadcopter to motor (meters).
@@ -23,7 +23,7 @@ namespace Specifications {
     static const float MASS = 1.0f;
 
     /// @brief Thrust coeffecient (kg-m)
-    static const float THRUST_COEFFECIENT = 2.39e-5f;
+    static const float THRUST_COEFFECIENT = 2.39e-5f/8;
 
     /// @brief Drag torque coefficients (kg-m^2/s^2)
     static const float DRAG_TORQUE_COEFFECIENT = 1.39e-6f;

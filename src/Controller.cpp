@@ -13,7 +13,6 @@ void Controller::updateInputs(const Vector3f& measuredEulerAngles, const PID& pi
     float g = Specifications::GRAVITY;
 
     const Vector3f& angleError = pidEulerAngles.error();
-    const Vector3f& velocityError = pidVelocities.error();
 
     _inputs.targetThrust = (m * g) / (cos(measuredEulerAngles.x) * cos(measuredEulerAngles.y));
     _inputs.targetEulerAngles.set(angleError);
@@ -23,9 +22,8 @@ void Controller::clampInputs() {
     float b = Specifications::DRAG_TORQUE_COEFFECIENT;
     float k = Specifications::THRUST_COEFFECIENT;
     float l = Specifications::ARM_LENGTH;
-    int wmin = Specifications::MIN_MOTOR_RPM_SQR;
-    int wmax = Specifications::MAX_MOTOR_RPM_SQR;
-
+    long wmin = Specifications::MIN_MOTOR_RPM_SQR;
+    long wmax = Specifications::MAX_MOTOR_RPM_SQR;
     _inputs.targetThrust = constrain(_inputs.targetThrust, 4 * k * wmin, 4 * k * wmax); // thrust
     _inputs.targetEulerAngles.x = constrain(_inputs.targetEulerAngles.x, -l * k * wmax, l * k * wmax); // roll torque
     _inputs.targetEulerAngles.y = constrain(_inputs.targetEulerAngles.y, -l * k * wmax, l * k * wmax); // pitch torque
