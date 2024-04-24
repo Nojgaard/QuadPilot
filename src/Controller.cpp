@@ -39,10 +39,16 @@ void Controller::computeTargetRPM(long targetRPSSqr[]) {
     float k = Specifications::THRUST_COEFFECIENT;
     float l = Specifications::ARM_LENGTH;
 
+    /*
     targetRPSSqr[0] = thrust / (4 * k) + a.y / (2 * l * k) + a.z / (4 * b);
     targetRPSSqr[1] = thrust / (4 * k) - a.x / (2 * l * k) - a.z / (4 * b);
     targetRPSSqr[2] = thrust / (4 * k) - a.y / (2 * l * k) + a.z / (4 * b);
     targetRPSSqr[3] = thrust / (4 * k) + a.x / (2 * l * k) - a.z / (4 * b);
+    */
+    targetRPSSqr[0] = thrust / (4 * k) +  sqrt(2)*a.y / (4 *l * k) +  sqrt(2)*a.x / (4 *l * k) + a.z / (4 * b);
+    targetRPSSqr[1] = thrust / (4 * k) - sqrt(2)*a.x / (4 * l * k) + sqrt(2)*a.y / (4 *l * k) - a.z / (4 * b);
+    targetRPSSqr[2] = thrust / (4 * k) - sqrt(2)*a.y / (4 * l * k) - sqrt(2)*a.x / (4 * l * k) + a.z / (4 * b);
+    targetRPSSqr[3] = thrust / (4 * k) + sqrt(2)*a.x / (4 * l * k) - sqrt(2)*a.y / (4 * l * k) - a.z / (4 * b);
 
     for (int i = 0; i < Specifications::NUM_MOTORS; i++) {
         targetRPSSqr[i] = constrain(targetRPSSqr[i], Specifications::MIN_MOTOR_RPS_SQR, Specifications::MAX_MOTOR_RPS_SQR);
